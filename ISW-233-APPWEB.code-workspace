@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "ISW-233-APPWEB",
+			"path": "."
+		},
+		{
+			"name": "vendor",
+			"path": "../../ISW-233-APPWEB/vendor"
+		},
+		{
+			"name": "services",
+			"path": "../../ISW-233-APPWEB/services"
+		},
+		{
+			"name": "blocks",
+			"path": "../../ISW-233-APPWEB/blocks"
+		},
+		{
+			"name": "pages",
+			"path": "../../ISW-233-APPWEB/pages"
+		}
+	],
+	"settings": {}
+}
