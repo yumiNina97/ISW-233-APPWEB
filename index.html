@@ -1,64 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="stylesheet" href="./pages/index.css" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Serif:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
-    <title>Exercise DOM API</title>
-  </head>
-  <body>
-    <div class="page">
-      <header class="header">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página Web Dinámica</title>
+    <link rel="stylesheet" href="./vendor/normalize.css">
+    <link rel="stylesheet" href="./pages/index.css">
+</head>
+<body class="page">
+    <header class="header">
         <nav class="nav">
-          <ul class="nav__links">
-            <li><a class="nav__link" href="#recipes">Elemento 1</a></li>
-            <li>
-              <a class="nav__link" href="#reservation">Elemento 2</a>
-            </li>
-            <li><a class="nav__link" href="#menu">Elemento 3</a></li>
-            <li><a class="nav__link" href="#contact">Elemento 4</a></li>
-          </ul>
-        </nav>
-      </header>
-
-      <main id="container" class="container"></main>
-
-      <footer class="footer">
-        <div class="footer__content">
-          <div class="footer__social">
-            <h3 class="footer__social-heading">Redes sociales</h3>
-            <ul class="footer__list">
-              <li class="footer__list-item">
-                <a href="#" class="footer__social-link"
-                  ><img
-                    src="./images/facebook_white.svg"
-                    alt="Logo Facebook"
-                    class="footer__social-icon"
-                  />
-                  Facebook</a
-                >
-              </li>
-              <li class="footer__list-item">
-                <img
-                  src="./images/instagram_white.svg"
-                  alt="Logo Instagram"
-                  class="footer__social-icon"
-                />
-                <a href="#" class="footer__social-link"> Instagram</a>
-              </li>
+            <ul class="nav__links">
+                <li><a href="#" class="nav__link">Inicio</a></li>
+                <li><a href="#" class="nav__link">Acerca de</a></li>
+                <li><a href="#" class="nav__link">Servicios</a></li>
+                <li><a href="#" class="nav__link">Contacto</a></li>
             </ul>
-          </div>
+        </nav>
+    </header>
+
+    <main class="content">
+        <section class="todo-app">
+            <h2 class="todo-app__title">Lista de Tareas (TODO App)</h2>
+            <form class="todo-app__form">
+                <input type="text" class="todo-app__input" placeholder="Añadir nueva tarea" required>
+                <button type="submit" class="todo-app__button">Añadir</button>
+            </form>
+            <ul class="todo-app__list"></ul>
+        </section>
+
+        <section class="cards">
+            <h2 class="cards__title">Películas Populares</h2>
+            <div class="card-container"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__social">
+            <a href="#" target="_blank"><img src="./images/facebook_white.svg" alt="Facebook" class="footer__social-icon"></a>
+            <a href="#" target="_blank"><img src="./images/instagram_white.svg" alt="Instagram" class="footer__social-icon"></a>
         </div>
-        <div class="footer__copyright">&copy; 2025 Your Name</div>
-      </footer>
-    </div>
-  </body>
+        <p class="footer__copyright">&copy; 2024 Yuvinca Nina. Todos los derechos reservados.</p>
+    </footer>
+
+    <template id="card-template">
+        <div class="card">
+            <img src="" alt="" class="card__image">
+            <div class="card__info">
+                <h3 class="card__title"></h3>
+                <p class="card__overview"></p>
+                <p class="card__release-date"></p>
+                <p class="card__vote-average"></p>
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="./index.js"></script>
+</body>
 </html>
