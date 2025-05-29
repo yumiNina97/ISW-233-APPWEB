@@ -6,18 +6,27 @@ globalThis.DOM = {};
 
 const DOM = globalThis.DOM;
 
-// Make sure TodoFactory is imported if not already via other modules
-// import { TodoFactory } from "./services/todoFactory.js"; 
-
 function renderList() {
-  const todos = TodoList.getInstance();
+  const todosInstance = TodoList.getInstance();
   DOM.todoList.innerHTML = "";
-  for (let todo of todos.items) {
+  for (let todo of todosInstance.items) { 
     const listItem = document.createElement("li");
-    listItem.className = "todo-item";
-    listItem.innerHTML = `${todo.text} 
-                <button class="delete-btn">Delete</button>`;
-    listItem.dataset.text = todo.text;
+    listItem.className = "todo-app__item"; 
+    if (todo.state === 'completed') { 
+        listItem.classList.add("todo-app__item--completed");
+    }
+    listItem.dataset.text = todo.text; 
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "todo-app__item-text";
+    textSpan.textContent = todo.text;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "todo-app__delete-button delete-btn"; 
+    deleteButton.textContent = "Delete";
+
+    listItem.appendChild(textSpan);
+    listItem.appendChild(deleteButton);
     DOM.todoList.appendChild(listItem);
   }
 }
@@ -30,9 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
   DOM.addBtn.addEventListener("click", () => {
     const todoText = DOM.todoInput.value;
     if (todoText.trim() !== "") {
-      const cmd = new Command(Commands.ADD, { text: todoText }); // Pass text as payload
+      const cmd = new Command(Commands.ADD, { text: todoText }); 
       CommandExecutor.execute(cmd);
-      DOM.todoInput.value = ""; // Clear input after adding
+      DOM.todoInput.value = ""; 
     } else {
       alert("Please enter a task!");
     }
@@ -41,14 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
   DOM.todoList.addEventListener("click", (event) => {
     if (event.target.classList.contains("delete-btn")) {
       const todoText = event.target.parentNode.dataset.text;
-      const cmd = new Command(Commands.DELETE, { text: todoText }); // Pass text as payload
+      const cmd = new Command(Commands.DELETE, { text: todoText }); 
       CommandExecutor.execute(cmd);
     }
-    // Add logic for toggling complete/pending if needed
-    // e.g., if (event.target.classList.contains('todo-item-text')) { ... }
   });
 
-  LocalStorage.load(); // This likely populates TodoList.getInstance()
+  LocalStorage.load(); 
 
   renderList();
   TodoList.getInstance().addObserver(renderList);

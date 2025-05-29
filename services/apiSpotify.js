@@ -1,6 +1,6 @@
-import API from "./api.js";
+import { API_Class } from "./api.js"; 
 
-class APISpotify extends API {
+class APISpotify extends API_Class {
   constructor() {
     super();
   }

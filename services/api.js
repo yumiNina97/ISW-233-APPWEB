@@ -3,7 +3,7 @@ export const API = {
   postRequest() {},
 };
 
-class API {
+class API_Class {
   constructor(url, headers) {
     this.url = url;
     this.header = headers;
@@ -12,4 +12,4 @@ class API {
 }
 
 const config = {};
-export const api = API(url, config);
+export const api = new API_Class(API.url, config); 
