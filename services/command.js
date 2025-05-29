@@ -1,13 +1,19 @@
-import { TodoFactory } from './todoFactory.js';
-import { TodoList } from "./todoList.js";
-import { TodoSorter } from './todoSorter.js';
+import { TodoHistory } from "./memento.js";
+import { TodoItem, TodoList } from "./todoList.js";
+
+export class Command {
+  name;
+  args;
+  constructor(name, args) {
+    this.name = name;
+    this.args = args;
+  }
+}
 
 export const Commands = {
   ADD: "add",
   DELETE: "delete",
-  COMPLETE: "complete",
-  ARCHIVE: "archive",
-  SORT: "sort"
+  UNDO: "undo",
 };
 
 export const CommandExecutor = {
@@ -17,27 +23,20 @@ export const CommandExecutor = {
       case Commands.ADD:
         const todoInput = globalThis.DOM.todoInput;
         const todoText = todoInput.value.trim();
-        const todoExist = todoList.find(todoText);
-        if (todoExist == undefined && todoText !== "") {
-          const newTodo = TodoFactory.createTodoItem(todoText);
-          todoList.add(newTodo);
+        const todoToAdd = todoList.find(todoText);
+
+        if (todoText !== "" && todoToAdd == undefined) {
+          todoList.add(new TodoItem(todoText));
           todoInput.value = "";
         }
         break;
-      case Commands.COMPLETE:
-        const todo = command.args.todo;
-        todo.complete();
-        todoList.notify();
-        break;
-      case Commands.ARCHIVE:
-        const todoToArchive = command.args.todo;
-        todoToArchive.archive();
-        todoList.notify();
-        break;
-      case Commands.SORT:
-        todoList.setSortStrategy(command.args.strategy);
-        break;
       case Commands.DELETE:
+        const [texTodo] = command.args;
+        todoList.delete(texTodo);
+        break;
+      case Commands.UNDO:
+        const todos = TodoHistory.pop();
+        todoList.replaceList(todos);
         break;
     }
   },

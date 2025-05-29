@@ -1,23 +1,28 @@
-import { Command, CommandExecutor, Commands } from "./services/command.js";
-import { TodoList } from "./services/todoList.js";
+import { TodoList, TodoItem } from "./services/todoList.js";
+import { CommandExecutor, Command, Commands } from "./services/command.js";
+import { LocalStorage } from "./services/storage.js";
 
 globalThis.DOM = {};
 
+const DOM = globalThis.DOM;
+
 function renderList() {
-  const todoList = TodoList.getInstance();
+  const todos = TodoList.getInstance();
   DOM.todoList.innerHTML = "";
-  for (const todo of todoList.items) {
-    const todoItem = document.createElement("li");
-    todoItem.classList.add("todo-item");
-    todoItem.innerHTML = `${todo.text} <button class="delete-btn">Delete</button>`;
-    DOM.todoList.appendChild(todoItem);
+  for (let todo of todos.items) {
+    const listItem = document.createElement("li");
+    listItem.className = "todo-item";
+    listItem.innerHTML = `${todo.text} 
+                <button class="delete-btn">Delete</button>`;
+    listItem.dataset.text = todo.text;
+    DOM.todoList.appendChild(listItem);
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  DOM.todoInput = document.getElementById("todo-input");
-  DOM.addBtn = document.getElementById("add-btn");
+document.addEventListener("DOMContentLoaded", () => {
   DOM.todoList = document.getElementById("todo-list");
+  DOM.addBtn = document.getElementById("add-btn");
+  DOM.todoInput = document.getElementById("todo-input");
 
   DOM.addBtn.addEventListener("click", () => {
     const cmd = new Command(Commands.ADD);
@@ -26,8 +31,27 @@ window.addEventListener("DOMContentLoaded", () => {
 
   DOM.todoList.addEventListener("click", (event) => {
     if (event.target.classList.contains("delete-btn")) {
+      const todo = event.target.parentNode.dataset.text;
+      const cmd = new Command(Commands.DELETE, [todo]);
+      CommandExecutor.execute(cmd);
     }
   });
 
+  LocalStorage.load();
+
+  renderList();
   TodoList.getInstance().addObserver(renderList);
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.ctrlKey && event.key === "p") {
+    event.preventDefault();
+    const cmd = new Command(Commands.ADD);
+    CommandExecutor.execute(cmd);
+  }
+  if (event.ctrlKey && event.key === "z") {
+    event.preventDefault();
+    const cmd = new Command(Commands.UNDO);
+    CommandExecutor.execute(cmd);
+  }
 });
