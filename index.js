@@ -10,8 +10,9 @@ const html = `<article class="card">
 
 // 1. Seleccione el container
 
+
 // 2. cree una funciotn createCardComponent.
-/**
+/*
  * @param {string} title
  * @param {string} body
  *
