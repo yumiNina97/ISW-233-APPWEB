@@ -6,6 +6,9 @@ globalThis.DOM = {};
 
 const DOM = globalThis.DOM;
 
+// Make sure TodoFactory is imported if not already via other modules
+// import { TodoFactory } from "./services/todoFactory.js"; 
+
 function renderList() {
   const todos = TodoList.getInstance();
   DOM.todoList.innerHTML = "";
@@ -25,19 +28,27 @@ document.addEventListener("DOMContentLoaded", () => {
   DOM.todoInput = document.getElementById("todo-input");
 
   DOM.addBtn.addEventListener("click", () => {
-    const cmd = new Command(Commands.ADD);
-    CommandExecutor.execute(cmd);
+    const todoText = DOM.todoInput.value;
+    if (todoText.trim() !== "") {
+      const cmd = new Command(Commands.ADD, { text: todoText }); // Pass text as payload
+      CommandExecutor.execute(cmd);
+      DOM.todoInput.value = ""; // Clear input after adding
+    } else {
+      alert("Please enter a task!");
+    }
   });
 
   DOM.todoList.addEventListener("click", (event) => {
     if (event.target.classList.contains("delete-btn")) {
-      const todo = event.target.parentNode.dataset.text;
-      const cmd = new Command(Commands.DELETE, [todo]);
+      const todoText = event.target.parentNode.dataset.text;
+      const cmd = new Command(Commands.DELETE, { text: todoText }); // Pass text as payload
       CommandExecutor.execute(cmd);
     }
+    // Add logic for toggling complete/pending if needed
+    // e.g., if (event.target.classList.contains('todo-item-text')) { ... }
   });
 
-  LocalStorage.load();
+  LocalStorage.load(); // This likely populates TodoList.getInstance()
 
   renderList();
   TodoList.getInstance().addObserver(renderList);
@@ -55,3 +66,33 @@ document.addEventListener("keydown", function (event) {
     CommandExecutor.execute(cmd);
   }
 });
+
+// Update renderList to show more details and handle states
+function renderList() {
+  const todosInstance = TodoList.getInstance();
+  DOM.todoList.innerHTML = "";
+  // items should be an array now from TodoList.get items()
+  for (let todo of todosInstance.items) { 
+    const listItem = document.createElement("li");
+    // Using BEM classes from previous suggestion
+    listItem.className = "todo-app__item"; 
+    if (todo.state === 'completed') { // Assuming 'completed' is a state in your TodoItem
+        listItem.classList.add("todo-app__item--completed");
+    }
+    listItem.dataset.text = todo.text; // Keep for delete functionality
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "todo-app__item-text";
+    textSpan.textContent = todo.text;
+    // Add event listener to textSpan for toggling completion if desired
+    // textSpan.addEventListener('click', () => { /* toggle command */ });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "todo-app__delete-button delete-btn"; // Added BEM class
+    deleteButton.textContent = "Delete";
+
+    listItem.appendChild(textSpan);
+    listItem.appendChild(deleteButton);
+    DOM.todoList.appendChild(listItem);
+  }
+}
