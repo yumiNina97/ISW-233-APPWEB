@@ -1,5 +1,4 @@
 import Router from "./services/Router.js";
-
 import Store from "./services/store.js";
 import { loadData } from "./services/Menu.js";
 

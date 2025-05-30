@@ -1,70 +1,60 @@
-// ... import your new page components ...
-// import SiteHeader from '../blocks/siteHeader/siteHeader.js'; // Example path
-// import SiteFooter from '../blocks/siteFooter/siteFooter.js'; // Example path
-// import MenuPage from '../blocks/menuPage/menuPage.js';
-// import OrderPage from '../blocks/orderPage/orderPage.js';
-// import RestaurantsPage from '../blocks/restaurantsPage/restaurantsPage.js';
+
 
 const Router = {
   init: () => {
-    document.querySelectorAll("a.nav__link").forEach((a) => {
-      a.addEventListener("click", (event) => {
+    console.log("Router init");
+    document.querySelectorAll("a.nav__link").forEach(a => {
+      a.addEventListener("click", event => {
         event.preventDefault();
-        const href = event.target.getAttribute("href");
-        Router.go(href);
+        const route = event.target.closest("a").getAttribute("href");
+        Router.go(route);
       });
     });
-    window.addEventListener("popstate", (event) => {
+    
+    window.addEventListener("popstate", event => {
       Router.go(event.state.route, false);
     });
-    // Optionally, render static parts like header/footer here if they are not in index.html directly
-    // const headerContainer = document.querySelector('header'); // Or another placeholder
-    // if (headerContainer) headerContainer.appendChild(document.createElement('site-header'));
     
     Router.go(location.pathname);
   },
-
   go: (route, addToHistory = true) => {
+    console.log(`Going to ${route}`);
     if (addToHistory) {
       history.pushState({ route }, "", route);
     }
-    let pageElement = null;
-    const mainContentArea = document.querySelector("main");
 
-    // Clear previous content
-    if (mainContentArea.firstElementChild) {
-      mainContentArea.firstElementChild.remove();
-    }
+    let pageContent = "";
+    const main = document.querySelector("main");
 
+    // Simple routing logic, replace with actual page rendering
     switch (route) {
       case "/":
-      case "/products": // Assuming / and /products show the same menu page
-        pageElement = document.createElement("menu-page");
+      
+        main.innerHTML = "<h1>Home</h1><p>Welcome to the homepage.</p>"; // Placeholder
+        break;
+      case "/products":
+     
+        main.innerHTML = "<h1>Menu</h1><p>Our delicious offerings.</p>"; // Placeholder, assuming menu-page is not yet fully integrated here
         break;
       case "/restaurants":
-        pageElement = document.createElement("restaurants-page");
+        main.innerHTML = "<h1>Restaurants</h1><p>Find our locations.</p>";
         break;
       case "/order":
-        pageElement = document.createElement("order-page");
+        main.innerHTML = "<h1>Order</h1><p>Your current order.</p>";
         break;
       default:
-        if (route.startsWith("/products/")) {
-          pageElement = document.createElement("product-detail-page"); // New component for detail
-          const productId = route.substring(route.lastIndexOf("/") + 1);
-          pageElement.dataset.productId = productId; // Pass ID to the component
-        } else {
-          pageElement = document.createElement("h1"); // Or a <not-found-page> component
-          pageElement.textContent = "404 - Page Not Found";
-        }
+        main.innerHTML = "<h1>404 - Page Not Found</h1>";
         break;
     }
 
-    if (pageElement) {
-      mainContentArea.appendChild(pageElement);
-    }
+    // If using pageContent string:
+    // if (main) {
+    //   main.innerHTML = pageContent;
+    // }
 
-    window.scrollTo(0, 0); // Corrected scroll
-  },
+    window.scrollX = 0;
+    window.scrollY = 0;
+  }
 };
 
 export default Router;
